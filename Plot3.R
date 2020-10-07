@@ -1,0 +1,17 @@
+#Plot3.R
+par(mfcol = c(1,1))
+#The file household_power_consumption.txt must be located on your working directory
+data <- read.table(".\\household_power_consumption.txt", header = TRUE, sep = ";", na.strings = "?")
+head(data)
+str(data)
+data$Date <- as.Date(data$Date, "%d/%m/%Y")
+str(data)
+dataSubset <- subset(data, data$Date >= as.Date("2007-02-01", "%Y-%m-%d") & data$Date <= as.Date("2007-02-02", "%Y-%m-%d"))
+dataSubset$DateTime <- as.POSIXct(paste(dataSubset$Date, dataSubset$Time))
+plot(dataSubset$Sub_metering_1 ~ dataSubset$DateTime, type = "n", xlab = "", ylab = "Energy sub meeting")
+lines(dataSubset$Sub_metering_1 ~ dataSubset$DateTime, col = "black", type = "l")
+lines(dataSubset$Sub_metering_2 ~ dataSubset$DateTime, col = "red", type = "l")
+lines(dataSubset$Sub_metering_3 ~ dataSubset$DateTime, col = "blue", type = "l")
+legend("topright", pch = "-", col = c("black", "red", "blue"), legend = c("Sub_metering_1", "Sub_metering_2", "Sub_metering_3"))
+dev.copy(png, file = "Plot3.png")
+dev.off()
